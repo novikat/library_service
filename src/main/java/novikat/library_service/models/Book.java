@@ -3,11 +3,13 @@ package novikat.library_service.models;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.SQLDelete;
 
 import java.util.Objects;
 import java.util.Set;
 @Entity
 @Table(name = "book")
+@SQLDelete(sql = "UPDATE book SET deleted = true WHERE id=? AND version = ?")
 public class Book extends BaseModel{
 
     @Column(name = "title")
@@ -15,6 +17,9 @@ public class Book extends BaseModel{
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "deleted")
+    private boolean deleted;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @Fetch(FetchMode.SUBSELECT)
@@ -85,6 +90,14 @@ public class Book extends BaseModel{
 
     public void setBookAuthor(Set<BookAuthor> bookAuthor) {
         this.bookAuthor = bookAuthor;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     @Override

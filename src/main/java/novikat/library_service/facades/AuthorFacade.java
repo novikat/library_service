@@ -8,11 +8,12 @@ import novikat.library_service.models.response.AuthorShortResponse;
 import novikat.library_service.services.AuthorService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Component;
 
 
 import java.util.Set;
 import java.util.stream.Collectors;
-
+@Component
 public class AuthorFacade {
     private AuthorService authorService;
 

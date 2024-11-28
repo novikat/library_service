@@ -3,21 +3,15 @@ package novikat.library_service.services;
 import novikat.library_service.models.Author;
 import novikat.library_service.models.request.CreateAuthorRequest;
 import novikat.library_service.models.request.UpdateAuthorRequest;
-import novikat.library_service.models.response.AuthorResponse;
-import novikat.library_service.models.response.AuthorShortResponse;
 import novikat.library_service.repositories.AuthorRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class AuthorServiceImpl implements AuthorService{
@@ -77,5 +71,15 @@ public class AuthorServiceImpl implements AuthorService{
                 .orElseThrow(() -> new RuntimeException("Author with id `" + id + "` doesn`t exist"));
     }
 
+    @Override
+    @Transactional
+    public void deleteAuthor(UUID id) {
+        if(this.getAuthorById(id).getBooks().isEmpty()){
+            this.authorRepository.deleteById(id);
+        }
+        else {
+            throw new RuntimeException("Author can`t be deleted because of connected books. Delete books first.");
+        }
 
+    }
 }

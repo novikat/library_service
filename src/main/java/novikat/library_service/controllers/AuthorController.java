@@ -13,15 +13,18 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/author")
 public class AuthorController {
 
     private AuthorFacade authorFacade;
+    private AuthorService authorService;
 
-    public AuthorController(AuthorFacade authorFacade) {
+    public AuthorController(AuthorFacade authorFacade, AuthorService authorService) {
         this.authorFacade = authorFacade;
+        this.authorService = authorService;
     }
 
     @GetMapping("/all")
@@ -42,5 +45,10 @@ public class AuthorController {
     @PutMapping("/update")
     public AuthorResponse updateAuthor(@RequestBody final UpdateAuthorRequest request){
         return this.authorFacade.updateAuthor(request);
+    }
+
+    @DeleteMapping("/delete")
+    public void deleteAuthor(@RequestParam final UUID id){
+        this.authorService.deleteAuthor(id);
     }
 }

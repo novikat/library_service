@@ -1,0 +1,1 @@
+ALTER TABLE book ADD deleted BOOLEAN DEFAULT false;

@@ -57,4 +57,11 @@ public class CategoryServiceImpl implements CategoryService{
 
         return this.categoryRepository.save(category);
     }
+
+    @Override
+    @Transactional
+    public void deleteCategory(UUID id) {
+        this.categoryRepository.deleteAllBookCategoryByCategoryId(id);
+        this.categoryRepository.deleteById(id);
+    }
 }

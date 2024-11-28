@@ -4,10 +4,11 @@ import novikat.library_service.models.Category;
 import novikat.library_service.models.request.UpdateCategoryRequest;
 import novikat.library_service.models.response.CategoryResponse;
 import novikat.library_service.services.CategoryService;
+import org.springframework.stereotype.Component;
 
 import java.util.Set;
 import java.util.stream.Collectors;
-
+@Component
 public class CategoryFacade {
     private CategoryService categoryService;
 

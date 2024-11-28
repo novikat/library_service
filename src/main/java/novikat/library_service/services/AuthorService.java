@@ -16,4 +16,6 @@ public interface AuthorService {
     Author updateAuthor(UpdateAuthorRequest request);
     Author getAuthorById(UUID id);
     Set<Author> getAuthorsByIdIn(Set<UUID> authorsId);
+
+    void deleteAuthor(UUID id);
 }

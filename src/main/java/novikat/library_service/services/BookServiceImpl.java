@@ -7,24 +7,18 @@ import novikat.library_service.models.projection.BookWithAuthorsProjection;
 import novikat.library_service.models.request.AddAuthorToBookRequest;
 import novikat.library_service.models.request.AddCategoryToBookRequest;
 import novikat.library_service.models.request.CreateBookRequest;
-import novikat.library_service.models.response.AuthorShortResponse;
-import novikat.library_service.models.response.BookDetailedResponse;
-import novikat.library_service.models.response.BookWithAuthorsResponse;
-import novikat.library_service.models.response.CategoryResponse;
-import novikat.library_service.repositories.AuthorRepository;
 import novikat.library_service.repositories.BookRepository;
+import novikat.library_service.utils.BookSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.*;
+
 @Service
-public class BookServiceImpl implements BookService{
+public class BookServiceImpl implements BookService {
 
     private BookRepository bookRepository;
     private CategoryService categoryService;
@@ -55,8 +49,9 @@ public class BookServiceImpl implements BookService{
         return this.bookRepository.save(book);
     }
 
-    public Book findBookById(UUID id){
-      return this.bookRepository.findById(id)
+    @Override
+    public Book findBookById(UUID id) {
+        return this.bookRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Book with id `" + id + "` doesn`t exist"));
     }
 
@@ -72,6 +67,7 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
+    @Transactional
     public Book addCategoryToBook(AddCategoryToBookRequest request) {
         Book book = this.findBookById(request.bookId());
         Category category = this.categoryService.findById(request.categoryId());
@@ -80,4 +76,53 @@ public class BookServiceImpl implements BookService{
 
         return this.bookRepository.save(book);
     }
+
+    @Override
+    @Transactional
+    public void deleteAllBookCategoryByBookId(UUID bookId) {
+        Book book = this.findBookById(bookId);
+
+        book.getCategories().clear();
+
+        this.bookRepository.save(book);
+    }
+
+    @Override
+    @Transactional
+    public void deleteBook(UUID id) {
+        this.deleteAllBookCategoryByBookId(id);
+        this.bookRepository.deleteById(id);
+    }
+
+    @Override
+    public Set<Category> findBookCategories(UUID id) {
+        return this.findBookById(id).getCategories();
+    }
+
+    @Override
+    public Set<Author> findBookAuthors(UUID id) {
+        return this.findBookById(id).getAuthors();
+    }
+
+    @Override
+    public List<BookWithAuthorsProjection> findAll(String titleLike,
+                                                   String authorLastNameLike,
+                                                   Set<UUID> categoriesIn,
+                                                   Pageable pageable) {
+        Specification<Book> filters = Specification
+                .where(Objects.isNull(titleLike) || titleLike.isBlank()
+                        ? null
+                        : BookSpecification.titleLike(titleLike))
+                .and(Objects.isNull(authorLastNameLike) || authorLastNameLike.isBlank()
+                        ? null
+                        : BookSpecification.authorLastNameLike(authorLastNameLike))
+                .and(Objects.isNull(categoriesIn) || categoriesIn.isEmpty()
+                        ? null
+                        : BookSpecification.categoryIdIn(categoriesIn));
+
+        Page<Book> filtered = this.bookRepository.findAll(filters, pageable);
+
+        return this.bookRepository.findBookAuthorsByBooksIn(filtered.stream().toList());
+    }
 }
+

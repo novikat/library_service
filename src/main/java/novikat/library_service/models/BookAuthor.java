@@ -1,9 +1,9 @@
 package novikat.library_service.models;
 
-import jakarta.persistence.*;
-
-import java.util.Objects;
-import java.util.UUID;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 @Entity
 public class BookAuthor extends BaseModel{
 
