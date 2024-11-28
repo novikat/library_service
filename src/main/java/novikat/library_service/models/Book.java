@@ -38,9 +38,6 @@ public class Book extends BaseModel{
     )
     private Set<Category> categories;
 
-    @ManyToMany(mappedBy = "books", fetch = FetchType.LAZY)
-    private Set<Shelf> shelves;
-
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private Set<BookAuthor> bookAuthor;
 
@@ -74,14 +71,6 @@ public class Book extends BaseModel{
 
     public void setCategories(Set<Category> categories) {
         this.categories = categories;
-    }
-
-    public Set<Shelf> getShelves() {
-        return shelves;
-    }
-
-    public void setShelves(Set<Shelf> shelves) {
-        this.shelves = shelves;
     }
 
     public Set<BookAuthor> getBookAuthor() {
