@@ -1,10 +1,10 @@
 package novikat.library_service.controllers;
 
 import novikat.library_service.facades.AuthorFacade;
-import novikat.library_service.models.request.CreateAuthorRequest;
-import novikat.library_service.models.request.UpdateAuthorRequest;
-import novikat.library_service.models.response.AuthorResponse;
-import novikat.library_service.models.response.AuthorShortResponse;
+import novikat.library_service.domain.request.CreateAuthorRequest;
+import novikat.library_service.domain.request.UpdateAuthorRequest;
+import novikat.library_service.domain.response.AuthorResponse;
+import novikat.library_service.domain.response.AuthorShortResponse;
 import novikat.library_service.services.AuthorService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

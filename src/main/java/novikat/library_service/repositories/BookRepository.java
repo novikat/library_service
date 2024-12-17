@@ -1,7 +1,7 @@
 package novikat.library_service.repositories;
 
-import novikat.library_service.models.Book;
-import novikat.library_service.models.projection.BookWithAuthorsProjection;
+import novikat.library_service.domain.models.Book;
+import novikat.library_service.domain.projection.BookWithAuthorsProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,7 +16,7 @@ import java.util.UUID;
 public interface BookRepository extends JpaRepository<Book, UUID> {
 
     @Query("""
-            select new novikat.library_service.models.projection.BookWithAuthorsProjection(
+            select new novikat.library_service.domain.projection.BookWithAuthorsProjection(
                 b.id,
                 b.title,
                 a.id,
@@ -31,7 +31,7 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
     Page<Book> findAll(Specification<Book> filters, Pageable pageable);
 
     @Query("""
-            select new novikat.library_service.models.projection.BookWithAuthorsProjection(
+            select new novikat.library_service.domain.projection.BookWithAuthorsProjection(
                 b.id,
                 b.title,
                 a.id,

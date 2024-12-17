@@ -1,6 +1,6 @@
 package novikat.library_service.repositories;
 
-import novikat.library_service.models.Author;
+import novikat.library_service.domain.models.Author;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

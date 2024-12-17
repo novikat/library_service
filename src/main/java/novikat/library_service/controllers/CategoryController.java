@@ -1,8 +1,8 @@
 package novikat.library_service.controllers;
 
 import novikat.library_service.facades.CategoryFacade;
-import novikat.library_service.models.request.UpdateCategoryRequest;
-import novikat.library_service.models.response.CategoryResponse;
+import novikat.library_service.domain.request.UpdateCategoryRequest;
+import novikat.library_service.domain.response.CategoryResponse;
 import novikat.library_service.services.CategoryService;
 import org.springframework.web.bind.annotation.*;
 

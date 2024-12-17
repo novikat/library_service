@@ -1,6 +1,6 @@
 package novikat.library_service.repositories;
 
-import novikat.library_service.models.Category;
+import novikat.library_service.domain.models.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

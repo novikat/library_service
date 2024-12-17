@@ -1,8 +1,8 @@
 package novikat.library_service.facades;
 
-import novikat.library_service.models.Category;
-import novikat.library_service.models.request.UpdateCategoryRequest;
-import novikat.library_service.models.response.CategoryResponse;
+import novikat.library_service.domain.models.Category;
+import novikat.library_service.domain.request.UpdateCategoryRequest;
+import novikat.library_service.domain.response.CategoryResponse;
 import novikat.library_service.services.CategoryService;
 import org.springframework.stereotype.Component;
 

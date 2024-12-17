@@ -1,7 +1,7 @@
 package novikat.library_service.services;
 
-import novikat.library_service.models.Category;
-import novikat.library_service.models.request.UpdateCategoryRequest;
+import novikat.library_service.domain.models.Category;
+import novikat.library_service.domain.request.UpdateCategoryRequest;
 
 import java.util.Set;
 import java.util.UUID;

@@ -1,6 +1,9 @@
 package novikat.library_service.utils;
 
 import jakarta.persistence.criteria.Join;
+import novikat.library_service.domain.models.Author;
+import novikat.library_service.domain.models.Book;
+import novikat.library_service.domain.models.Category;
 import novikat.library_service.models.*;
 import org.springframework.data.jpa.domain.Specification;
 

@@ -1,13 +1,13 @@
 package novikat.library_service.services;
 
 
-import novikat.library_service.models.Author;
-import novikat.library_service.models.Book;
-import novikat.library_service.models.Category;
-import novikat.library_service.models.projection.BookWithAuthorsProjection;
-import novikat.library_service.models.request.AddAuthorToBookRequest;
-import novikat.library_service.models.request.AddCategoryToBookRequest;
-import novikat.library_service.models.request.CreateBookRequest;
+import novikat.library_service.domain.models.Author;
+import novikat.library_service.domain.models.Book;
+import novikat.library_service.domain.models.Category;
+import novikat.library_service.domain.projection.BookWithAuthorsProjection;
+import novikat.library_service.domain.request.AddAuthorToBookRequest;
+import novikat.library_service.domain.request.AddCategoryToBookRequest;
+import novikat.library_service.domain.request.CreateBookRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
