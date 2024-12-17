@@ -1,4 +1,4 @@
-package novikat.library_service.models.request;
+package novikat.library_service.domain.request;
 
 import org.springframework.lang.NonNull;
 

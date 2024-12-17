@@ -1,4 +1,4 @@
-package novikat.library_service.models;
+package novikat.library_service.domain.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

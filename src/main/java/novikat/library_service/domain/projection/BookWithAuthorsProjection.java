@@ -1,4 +1,4 @@
-package novikat.library_service.models.projection;
+package novikat.library_service.domain.projection;
 
 import java.util.UUID;
 

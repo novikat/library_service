@@ -1,4 +1,4 @@
-package novikat.library_service.models.response;
+package novikat.library_service.domain.response;
 
 import java.util.UUID;
 

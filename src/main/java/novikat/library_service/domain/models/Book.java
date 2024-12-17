@@ -1,4 +1,4 @@
-package novikat.library_service.models;
+package novikat.library_service.domain.models;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.Fetch;
