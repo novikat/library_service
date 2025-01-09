@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -82,11 +79,6 @@ public class KeycloakServiceImpl implements KeycloakService{
     private RolesResource getRolesResource(){
         return this.keycloak.realm(realm).roles();
     }
-//
-//    private GroupsResource getGroupResource(){
-//        return this.keycloak.realm(realm).groups();
-//    }
-
     private UserRepresentation getUserByUsername(String username){
         List<UserRepresentation> userRepresentations = this.getUsersResource().searchByUsername(username, true);
         if(!userRepresentations.isEmpty()){
@@ -95,5 +87,15 @@ public class KeycloakServiceImpl implements KeycloakService{
         else{
             throw new RuntimeException("User doesn't exist");
         }
+    }
+
+    @Override
+    public void updateUser(String oldUsername, String newUsername, String newEmail) {
+        UserRepresentation userRepresentation = this.getUserByUsername(oldUsername);
+        UserResource userResource = this.getUsersResource()
+                .get(userRepresentation.getId());
+        Optional.ofNullable(newUsername).ifPresent(userRepresentation::setUsername);
+        Optional.ofNullable(newEmail).ifPresent(userRepresentation::setEmail);
+        userResource.update(userRepresentation);
     }
 }

@@ -1,0 +1,34 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/library_db
+    username: postgres
+    password: katya
+  sql:
+    init:
+      mode: always
+  docker:
+    compose:
+      enabled: false
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8081/realms/library
+            user-name-attribute: preferred_username
+        registration:
+          keycloak:
+            client-id: library-app
+            client-secret: 8s08XP7AFSrxJoPbjgjY7YLUPHL89J3S
+            scope: openid
+server:
+  port: 8080
+keycloak:
+  server-uri: http://localhost:8081
+  realm: library
+  admin-client-secret: aWhBxEBxW9jR20jdxm8vFxzTOpAUUCBU
+  admin-client-id: admin-cli
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: DEBUG

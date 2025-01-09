@@ -1,11 +1,10 @@
 package novikat.library_service.controllers;
 
-import novikat.library_service.facades.BookFacade;
-import novikat.library_service.domain.request.AddAuthorToBookRequest;
-import novikat.library_service.domain.request.AddCategoryToBookRequest;
+import novikat.library_service.domain.request.UpdateBookRequest;
 import novikat.library_service.domain.request.CreateBookRequest;
 import novikat.library_service.domain.response.BookDetailedResponse;
 import novikat.library_service.domain.response.BookWithAuthorsResponse;
+import novikat.library_service.facades.BookFacade;
 import novikat.library_service.services.BookService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,42 +27,31 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @GetMapping("/all_with_authors")
-    public Page<BookWithAuthorsResponse> findAllBooksWithAuthors(@PageableDefault(value = 20, page = 0) Pageable pageable){
-        return this.bookFacade.getAllBooksWithAuthors(pageable);
-    }
-
     @GetMapping("/all")
     public Page<BookWithAuthorsResponse> findAll(@RequestParam(required = false) String titleLike,
                                               @RequestParam(required = false) String authorLastNameLike,
                                               @RequestParam(required = false) Set<UUID> categoriesIn,
                                               @PageableDefault (value = 20, page = 0) Pageable pageable
                                               ){
-        return this.bookFacade.findAll(titleLike, authorLastNameLike, categoriesIn, pageable);
+        return this.bookFacade.findAll(titleLike, authorLastNameLike, categoriesIn, pageable, false);
     }
 
     @GetMapping()
-    public BookDetailedResponse findBookById(@RequestParam UUID id){
-        return this.bookFacade.findBookById(id);
+    public BookDetailedResponse findById(@RequestParam UUID id){
+        return this.bookFacade.findById(id);
     }
 
-    @PostMapping("/add")
-    public BookDetailedResponse addBook(@RequestBody final CreateBookRequest request){
-        return this.bookFacade.addBook(request);
+    @PostMapping()
+    public BookDetailedResponse create(@RequestBody final CreateBookRequest request){
+        return this.bookFacade.create(request);
+    }
+    @DeleteMapping()
+    public void delete(@RequestParam final UUID id){
+        this.bookService.delete(id);
     }
 
-    @PutMapping("/add_author")
-    public BookDetailedResponse addAuthorToBook(@RequestBody final AddAuthorToBookRequest request){
-        return this.bookFacade.addAuthorToBook(request);
-    }
-
-    @PutMapping("/add_category")
-    public BookDetailedResponse addCategoryToBook(@RequestBody final AddCategoryToBookRequest request){
-        return this.bookFacade.addCategoryToBook(request);
-    }
-
-    @DeleteMapping("/delete")
-    public void deleteBook(@RequestParam UUID id){
-        this.bookService.deleteBook(id);
+    @PutMapping()
+    public BookDetailedResponse update(@RequestBody final UpdateBookRequest request){
+        return this.bookFacade.update(request);
     }
 }

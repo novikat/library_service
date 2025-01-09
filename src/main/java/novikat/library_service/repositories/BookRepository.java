@@ -43,6 +43,4 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
             where b in ?1
             """)
     List<BookWithAuthorsProjection> findBookAuthorsByBooksIn(List<Book> books);
-
-
 }

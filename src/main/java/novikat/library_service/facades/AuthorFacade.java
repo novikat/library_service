@@ -5,6 +5,8 @@ import novikat.library_service.domain.request.CreateAuthorRequest;
 import novikat.library_service.domain.request.UpdateAuthorRequest;
 import novikat.library_service.domain.response.AuthorResponse;
 import novikat.library_service.domain.response.AuthorShortResponse;
+import novikat.library_service.domain.response.AuthorWithBooksResponse;
+import novikat.library_service.domain.response.BookShortResponse;
 import novikat.library_service.services.AuthorService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 @Component
 public class AuthorFacade {
@@ -21,8 +24,8 @@ public class AuthorFacade {
         this.authorService = authorService;
     }
     
-    public AuthorResponse addAuthor(CreateAuthorRequest request){
-        Author author = this.authorService.addAuthor(request);
+    public AuthorResponse create(CreateAuthorRequest request){
+        Author author = this.authorService.create(request);
 
         return new AuthorResponse(
                 author.getId(),
@@ -32,8 +35,8 @@ public class AuthorFacade {
         );
     }
 
-    public Page<AuthorResponse> getAuthors(Pageable pageable){
-        return this.authorService.getAuthors(pageable)
+    public Page<AuthorResponse> findAll(Pageable pageable){
+        return this.authorService.findAll(pageable)
                 .map(author -> new AuthorResponse(
                         author.getId(),
                         author.getFirstName(),
@@ -42,8 +45,8 @@ public class AuthorFacade {
                 ));
     }
 
-    public Set<AuthorShortResponse> getAuthorsByLastName(String lastName){
-        return this.authorService.getAuthorsByLastName(lastName).stream()
+    public Set<AuthorShortResponse> findByLastname(String lastName){
+        return this.authorService.findByLastname(lastName).stream()
                 .map(author -> new AuthorShortResponse(
                         author.getId(),
                         author.getFirstName(),
@@ -52,14 +55,27 @@ public class AuthorFacade {
                 .collect(Collectors.toSet());
     }
 
-    public AuthorResponse updateAuthor(UpdateAuthorRequest request){
-        Author author = this.authorService.updateAuthor(request);
+    public AuthorResponse update(UpdateAuthorRequest request){
+        Author author = this.authorService.update(request);
 
         return new AuthorResponse(
                 author.getId(),
                 author.getFirstName(),
                 author.getLastName(),
                 author.getBiography()
+        );
+    }
+
+    public AuthorWithBooksResponse findById(UUID id) {
+        Author author = this.authorService.findById(id);
+        return new AuthorWithBooksResponse(
+                author.getId(),
+                author.getFirstName(),
+                author.getLastName(),
+                author.getBiography(),
+                author.getBooks().stream()
+                        .map(book -> new BookShortResponse(book.getId(), book.getTitle()))
+                        .collect(Collectors.toSet())
         );
     }
 }

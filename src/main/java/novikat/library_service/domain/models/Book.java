@@ -41,6 +41,10 @@ public class Book extends BaseModel{
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private Set<BookAuthor> bookAuthor;
 
+
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    private Set<AccountBook> bookAccounts;
+
     public String getTitle() {
         return title;
     }

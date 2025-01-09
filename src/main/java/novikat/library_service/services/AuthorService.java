@@ -10,12 +10,12 @@ import java.util.Set;
 import java.util.UUID;
 
 public interface AuthorService {
-    Author addAuthor(CreateAuthorRequest request);
-    Page<Author> getAuthors(Pageable pageable);
-    Set<Author> getAuthorsByLastName(String lastName);
-    Author updateAuthor(UpdateAuthorRequest request);
-    Author getAuthorById(UUID id);
-    Set<Author> getAuthorsByIdIn(Set<UUID> authorsId);
+    Author create(CreateAuthorRequest request);
+    Page<Author> findAll(Pageable pageable);
+    Set<Author> findByLastname(String lastName);
+    Author update(UpdateAuthorRequest request);
+    Author findById(UUID id);
+    Set<Author> findByIdIn(Set<UUID> authorsId);
 
-    void deleteAuthor(UUID id);
+    void delete(UUID id);
 }

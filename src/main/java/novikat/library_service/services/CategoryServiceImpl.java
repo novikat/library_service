@@ -19,13 +19,13 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public Set<Category> getCategories() {
+    public Set<Category> findAll() {
         return new HashSet<>(this.categoryRepository.findAll());
     }
 
     @Override
     @Transactional
-    public Category addCategory(String name) {
+    public Category create(String name) {
         if(this.categoryRepository.existsByNameIgnoreCase(name)){
             throw new RuntimeException("Category `" + name + "` already exists");
         }
@@ -38,7 +38,7 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public Set<Category> getCategoriesByIdIn(Set<UUID> categoriesId) {
+    public Set<Category> findAllByIdIn(Set<UUID> categoriesId) {
         return this.categoryRepository.findAllByIdIn(categoriesId);
     }
 
@@ -50,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     @Transactional
-    public Category updateCategory(UpdateCategoryRequest request) {
+    public Category update(UpdateCategoryRequest request) {
         Category category = this.findById(request.id());
 
         category.setName(request.name());
@@ -60,7 +60,7 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     @Transactional
-    public void deleteCategory(UUID id) {
+    public void delete(UUID id) {
         this.categoryRepository.deleteAllBookCategoryByCategoryId(id);
         this.categoryRepository.deleteById(id);
     }

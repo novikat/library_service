@@ -1,14 +1,13 @@
 package novikat.library_service.services;
 
-
 import novikat.library_service.domain.models.Author;
 import novikat.library_service.domain.models.Book;
 import novikat.library_service.domain.models.Category;
 import novikat.library_service.domain.projection.BookWithAuthorsProjection;
-import novikat.library_service.domain.request.AddAuthorToBookRequest;
-import novikat.library_service.domain.request.AddCategoryToBookRequest;
+import novikat.library_service.domain.request.EditAuthorBookRequest;
+import novikat.library_service.domain.request.EditCategoryBookRequest;
 import novikat.library_service.domain.request.CreateBookRequest;
-import org.springframework.data.domain.Page;
+import novikat.library_service.domain.request.UpdateBookRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -19,16 +18,13 @@ import java.util.UUID;
 @Service
 public interface BookService {
 
-    Page<BookWithAuthorsProjection> getAllBooksWithAuthors(Pageable pageable);
+//    Page<BookWithAuthorsProjection> getAllBooksWithAuthors(Pageable pageable);
 
-    Book addBook(CreateBookRequest request);
-    Book addAuthorToBook(AddAuthorToBookRequest request);
+    Book create(CreateBookRequest request);
 
-    Book addCategoryToBook(AddCategoryToBookRequest request);
+    void delete(UUID id);
 
-    void deleteBook(UUID id);
-
-    Book findBookById(UUID id);
+    Book findById(UUID id);
 
     Set<Category> findBookCategories(UUID id);
     void deleteAllBookCategoryByBookId(UUID bookId);
@@ -38,6 +34,8 @@ public interface BookService {
     List<BookWithAuthorsProjection> findAll(String titleLike,
                                             String authorLastNameLike,
                                             Set<UUID> categoriesIn,
-                                            Pageable pageable);
+                                            Pageable pageable,
+                                            boolean visibleDeleted);
 
+    Book update(UpdateBookRequest request);
 }

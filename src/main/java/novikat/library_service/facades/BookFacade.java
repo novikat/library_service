@@ -1,13 +1,11 @@
 package novikat.library_service.facades;
 
 import novikat.library_service.domain.models.Book;
-import novikat.library_service.domain.response.AuthorShortResponse;
-import novikat.library_service.domain.response.BookDetailedResponse;
-import novikat.library_service.domain.response.BookWithAuthorsResponse;
-import novikat.library_service.domain.response.CategoryResponse;
+import novikat.library_service.domain.request.UpdateBookRequest;
+import novikat.library_service.domain.response.*;
 import novikat.library_service.domain.projection.BookWithAuthorsProjection;
-import novikat.library_service.domain.request.AddAuthorToBookRequest;
-import novikat.library_service.domain.request.AddCategoryToBookRequest;
+import novikat.library_service.domain.request.EditAuthorBookRequest;
+import novikat.library_service.domain.request.EditCategoryBookRequest;
 import novikat.library_service.domain.request.CreateBookRequest;
 import novikat.library_service.services.BookService;
 import org.springframework.data.domain.Page;
@@ -25,40 +23,8 @@ public class BookFacade {
         this.bookService = bookService;
     }
 
-    public Page<BookWithAuthorsResponse> getAllBooksWithAuthors(Pageable pageable){
-        Page<BookWithAuthorsProjection> projections = this.bookService.getAllBooksWithAuthors(pageable);
-
-        List<BookWithAuthorsResponse> books = new ArrayList<>();
-
-        for (BookWithAuthorsProjection projection: projections){
-            Optional<BookWithAuthorsResponse> optional = books.stream().filter(book -> book.bookId().equals(projection.bookId())).findFirst();
-            if(optional.isEmpty()){
-                Set<AuthorShortResponse> authors = new HashSet<>();
-                authors.add(new AuthorShortResponse(
-                        projection.authorId(),
-                        projection.authorFirstName(),
-                        projection.authorLastName()
-                ));
-                books.add(new BookWithAuthorsResponse(
-                        projection.bookId(),
-                        projection.title(),
-                        authors
-                ));
-            }
-            else{
-                optional.get().authors().add(new AuthorShortResponse(
-                        projection.authorId(),
-                        projection.authorFirstName(),
-                        projection.authorLastName()
-                ));
-            }
-        }
-
-        return new PageImpl<>(books);
-    }
-
-    public BookDetailedResponse addBook(CreateBookRequest request){
-        Book savedBook = this.bookService.addBook(request);
+    public BookDetailedResponse create(CreateBookRequest request){
+        Book savedBook = this.bookService.create(request);
 
         return new BookDetailedResponse(
                 savedBook.getId(),
@@ -79,52 +45,8 @@ public class BookFacade {
         );
     }
 
-    public BookDetailedResponse addAuthorToBook(AddAuthorToBookRequest request){
-        Book savedBook = this.bookService.addAuthorToBook(request);
-
-        return new BookDetailedResponse(
-                savedBook.getId(),
-                savedBook.getTitle(),
-                savedBook.getAuthors().stream()
-                        .map(person -> new AuthorShortResponse(
-                                person.getId(),
-                                person.getFirstName(),
-                                person.getLastName()
-                        ))
-                        .collect(Collectors.toSet()),
-                savedBook.getCategories().stream()
-                        .map(category -> new CategoryResponse(
-                                category.getId(),
-                                category.getName()
-                        ))
-                        .collect(Collectors.toSet())
-        );
-    }
-
-    public BookDetailedResponse addCategoryToBook(AddCategoryToBookRequest request){
-        Book savedBook = this.bookService.addCategoryToBook(request);
-
-        return new BookDetailedResponse(
-                savedBook.getId(),
-                savedBook.getTitle(),
-                savedBook.getAuthors().stream()
-                        .map(person -> new AuthorShortResponse(
-                                person.getId(),
-                                person.getFirstName(),
-                                person.getLastName()
-                        ))
-                        .collect(Collectors.toSet()),
-                savedBook.getCategories().stream()
-                        .map(category -> new CategoryResponse(
-                                category.getId(),
-                                category.getName()
-                        ))
-                        .collect(Collectors.toSet())
-        );
-    }
-
-    public BookDetailedResponse findBookById(UUID id) {
-        Book book = this.bookService.findBookById(id);
+    public BookDetailedResponse findById(UUID id) {
+        Book book = this.bookService.findById(id);
         Set<CategoryResponse> categories = this.bookService.findBookCategories(id).stream()
                 .map(category -> new CategoryResponse(
                         category.getId(),
@@ -150,12 +72,14 @@ public class BookFacade {
     public Page<BookWithAuthorsResponse> findAll(String titleLike,
                                                  String authorLastNameLike,
                                                  Set<UUID> categoriesIn,
-                                                 Pageable pageable) {
+                                                 Pageable pageable,
+                                                 boolean visibleDeleted) {
         List<BookWithAuthorsProjection> projections = this.bookService
                 .findAll(titleLike,
                         authorLastNameLike,
                         categoriesIn,
-                        pageable);
+                        pageable,
+                        visibleDeleted);
 
         List<BookWithAuthorsResponse> books = new ArrayList<>();
 
@@ -174,8 +98,7 @@ public class BookFacade {
                         projection.title(),
                         authors
                 ));
-            }
-            else{
+            } else {
                 optional.get().authors().add(new AuthorShortResponse(
                         projection.authorId(),
                         projection.authorFirstName(),
@@ -185,5 +108,26 @@ public class BookFacade {
         }
 
         return new PageImpl<>(books);
+    }
+    public BookDetailedResponse update(UpdateBookRequest request) {
+        Book savedBook = this.bookService.update(request);
+
+        return new BookDetailedResponse(
+                savedBook.getId(),
+                savedBook.getTitle(),
+                savedBook.getAuthors().stream()
+                        .map(person -> new AuthorShortResponse(
+                                person.getId(),
+                                person.getFirstName(),
+                                person.getLastName()
+                        ))
+                        .collect(Collectors.toSet()),
+                savedBook.getCategories().stream()
+                        .map(category -> new CategoryResponse(
+                                category.getId(),
+                                category.getName()
+                        ))
+                        .collect(Collectors.toSet())
+        );
     }
 }

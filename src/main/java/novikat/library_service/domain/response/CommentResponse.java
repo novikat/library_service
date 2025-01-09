@@ -1,12 +1,13 @@
 package novikat.library_service.domain.response;
 
+import java.time.Instant;
 import java.util.UUID;
 
-public record AccountResponse(
+public record CommentResponse(
         UUID id,
+        UUID bookId,
         String username,
-        String email,
-        String firstName,
-        String lastName
+        Instant date,
+        String text
 ) {
 }

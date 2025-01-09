@@ -1,5 +1,6 @@
 package novikat.library_service.controllers;
 
+import novikat.library_service.domain.response.AuthorWithBooksResponse;
 import novikat.library_service.facades.AuthorFacade;
 import novikat.library_service.domain.request.CreateAuthorRequest;
 import novikat.library_service.domain.request.UpdateAuthorRequest;
@@ -27,28 +28,33 @@ public class AuthorController {
         this.authorService = authorService;
     }
 
+    @GetMapping()
+    public AuthorWithBooksResponse findById(@RequestParam final UUID id){
+        return this.authorFacade.findById(id);
+    }
+
     @GetMapping("/all")
-    public Page<AuthorResponse> getAuthors(@PageableDefault(value = 20, page = 0, direction = Sort.Direction.ASC) Pageable pageable){
-        return this.authorFacade.getAuthors(pageable);
+    public Page<AuthorResponse> findAll(@PageableDefault(value = 20, page = 0, direction = Sort.Direction.ASC) Pageable pageable){
+        return this.authorFacade.findAll(pageable);
     }
 
     @GetMapping("/all/by_lastname")
-    public Set<AuthorShortResponse> getAuthorsByLastName(@RequestParam final String lastName){
-        return this.authorFacade.getAuthorsByLastName(lastName);
+    public Set<AuthorShortResponse> findByLastname(@RequestParam final String lastName){
+        return this.authorFacade.findByLastname(lastName);
     }
 
-    @PostMapping("/add")
-    public AuthorResponse addAuthor(@RequestBody final CreateAuthorRequest request){
-        return this.authorFacade.addAuthor(request);
+    @PostMapping()
+    public AuthorResponse create(@RequestBody final CreateAuthorRequest request){
+        return this.authorFacade.create(request);
     }
 
-    @PutMapping("/update")
-    public AuthorResponse updateAuthor(@RequestBody final UpdateAuthorRequest request){
-        return this.authorFacade.updateAuthor(request);
+    @PutMapping()
+    public AuthorResponse update(@RequestBody final UpdateAuthorRequest request){
+        return this.authorFacade.update(request);
     }
 
-    @DeleteMapping("/delete")
-    public void deleteAuthor(@RequestParam final UUID id){
-        this.authorService.deleteAuthor(id);
+    @DeleteMapping()
+    public void delete(@RequestParam final UUID id){
+        this.authorService.delete(id);
     }
 }

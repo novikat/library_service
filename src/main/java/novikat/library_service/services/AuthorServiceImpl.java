@@ -24,7 +24,7 @@ public class AuthorServiceImpl implements AuthorService{
 
     @Override
     @Transactional
-    public Author addAuthor(CreateAuthorRequest request) {
+    public Author create(CreateAuthorRequest request) {
         if(this.authorRepository.existsByFirstNameAndLastName(request.firstName(), request.lastName())){
             throw new RuntimeException("Author " + request.firstName() + " " + request.lastName() + " already exist." );
         }
@@ -39,24 +39,24 @@ public class AuthorServiceImpl implements AuthorService{
     }
 
     @Override
-    public Page<Author> getAuthors(Pageable pageable) {
+    public Page<Author> findAll(Pageable pageable) {
         return this.authorRepository.findAll(pageable);
     }
 
     @Override
-    public Set<Author> getAuthorsByLastName(String lastName) {
+    public Set<Author> findByLastname(String lastName) {
         return this.authorRepository.findByLastNameContainingIgnoreCase(lastName);
     }
 
     @Override
-    public Set<Author> getAuthorsByIdIn(Set<UUID> authorsId) {
+    public Set<Author> findByIdIn(Set<UUID> authorsId) {
         return this.authorRepository.findAllByIdIn(authorsId);
     }
 
     @Override
     @Transactional
-    public Author updateAuthor(UpdateAuthorRequest request) {
-        Author author = this.getAuthorById(request.id());
+    public Author update(UpdateAuthorRequest request) {
+        Author author = this.findById(request.id());
 
         Optional.ofNullable(request.firstName()).ifPresent(author::setFirstName);
         Optional.ofNullable(request.lastName()).ifPresent(author::setLastName);
@@ -66,15 +66,15 @@ public class AuthorServiceImpl implements AuthorService{
     }
 
     @Override
-    public Author getAuthorById(UUID id) {
+    public Author findById(UUID id) {
         return this.authorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Author with id `" + id + "` doesn`t exist"));
     }
 
     @Override
     @Transactional
-    public void deleteAuthor(UUID id) {
-        if(this.getAuthorById(id).getBooks().isEmpty()){
+    public void delete(UUID id) {
+        if(this.findById(id).getBooks().isEmpty()){
             this.authorRepository.deleteById(id);
         }
         else {

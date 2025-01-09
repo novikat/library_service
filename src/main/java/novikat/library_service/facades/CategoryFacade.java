@@ -16,8 +16,8 @@ public class CategoryFacade {
         this.categoryService = categoryService;
     }
 
-    public Set<CategoryResponse> getCategories(){
-        return this.categoryService.getCategories().stream()
+    public Set<CategoryResponse> findAll(){
+        return this.categoryService.findAll().stream()
                 .map(category ->
                         new CategoryResponse(
                                 category.getId(),
@@ -26,8 +26,8 @@ public class CategoryFacade {
                 .collect(Collectors.toSet());
     }
 
-    public CategoryResponse addCategory(String name){
-        Category category = this.categoryService.addCategory(name);
+    public CategoryResponse create(String name){
+        Category category = this.categoryService.create(name);
 
         return new CategoryResponse(
                 category.getId(),
@@ -35,8 +35,8 @@ public class CategoryFacade {
         );
     }
 
-    public CategoryResponse updateCategory(UpdateCategoryRequest request){
-        Category category = this.categoryService.updateCategory(request);
+    public CategoryResponse update(UpdateCategoryRequest request){
+        Category category = this.categoryService.update(request);
 
         return new CategoryResponse(
                 category.getId(),

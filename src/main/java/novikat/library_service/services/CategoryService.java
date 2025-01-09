@@ -8,11 +8,11 @@ import java.util.UUID;
 
 public interface CategoryService {
 
-    Set<Category> getCategories();
-    Category addCategory(String name);
-    Set<Category> getCategoriesByIdIn(Set<UUID> categoriesId);
-    Category updateCategory(UpdateCategoryRequest request);
+    Set<Category> findAll();
+    Category create(String name);
+    Set<Category> findAllByIdIn(Set<UUID> categoriesId);
+    Category update(UpdateCategoryRequest request);
     Category findById(UUID id);
 
-    void deleteCategory(UUID id);
+    void delete(UUID id);
 }

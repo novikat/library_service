@@ -1,12 +1,10 @@
 package novikat.library_service.utils;
 
 import jakarta.persistence.criteria.Join;
-import novikat.library_service.domain.models.Author;
-import novikat.library_service.domain.models.Book;
-import novikat.library_service.domain.models.Category;
-import novikat.library_service.models.*;
+import novikat.library_service.domain.models.*;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -32,5 +30,10 @@ public class BookSpecification {
             Join<Book, Category> bookCategory = root.join(Book_.CATEGORIES);
             return bookCategory.get(Category_.ID).in(categories);
         };
+    }
+
+    public static Specification<Book> isNotDeleted(){
+        return ((root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get(Book_.DELETED), false));
     }
 }

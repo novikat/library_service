@@ -1,10 +1,10 @@
 package novikat.library_service.domain.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.Objects;
+import java.util.Set;
+
 @Entity
 @Table(name = "account")
 public class Account extends BaseModel{
@@ -16,6 +16,18 @@ public class Account extends BaseModel{
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(
+            name = "account_book",
+            joinColumns = @JoinColumn(name = "account_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id")
+    )
+    private Set<Book> favoriteBooks;
+
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    private Set<AccountBook> accountBooks;
+
 
     public String getUsername() {
         return username;
@@ -48,6 +60,13 @@ public class Account extends BaseModel{
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+    public Set<Book> getFavoriteBooks() {
+        return favoriteBooks;
+    }
+//
+//    public void setFavoriteBooks(Set<Book> favoriteBooks) {
+//        this.favoriteBooks = favoriteBooks;
+//    }
 
     @Override
     public boolean equals(Object o) {

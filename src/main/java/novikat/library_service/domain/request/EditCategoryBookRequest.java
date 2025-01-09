@@ -4,10 +4,10 @@ import org.springframework.lang.NonNull;
 
 import java.util.UUID;
 
-public record AddAuthorToBookRequest (
+public record EditCategoryBookRequest(
         @NonNull
         UUID bookId,
         @NonNull
-        UUID authorId
-){
+        UUID categoryId
+) {
 }

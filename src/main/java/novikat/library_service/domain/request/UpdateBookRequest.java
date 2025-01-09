@@ -1,14 +1,15 @@
 package novikat.library_service.domain.request;
 
-import novikat.library_service.domain.enums.Role;
 import org.springframework.lang.NonNull;
 
+import java.util.Set;
 import java.util.UUID;
 
-public record SetRoleRequest (
+public record UpdateBookRequest(
         @NonNull
         UUID id,
-        @NonNull
-        Role role
-){
+        String title,
+        Set<UUID> authors,
+        Set<UUID> categories
+) {
 }

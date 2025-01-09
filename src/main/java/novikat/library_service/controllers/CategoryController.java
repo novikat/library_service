@@ -21,22 +21,22 @@ public class CategoryController {
     }
 
     @GetMapping("/all")
-    public Set<CategoryResponse> getCategories(){
-        return this.categoryFacade.getCategories();
+    public Set<CategoryResponse> findAll(){
+        return this.categoryFacade.findAll();
     }
 
-    @PostMapping("/add")
-    public CategoryResponse addCategory(@RequestParam String name){
-        return this.categoryFacade.addCategory(name);
+    @PostMapping()
+    public CategoryResponse create(@RequestParam String name){
+        return this.categoryFacade.create(name);
     }
 
-    @PutMapping("/update")
-    public CategoryResponse updateCategory(@RequestBody UpdateCategoryRequest request){
-        return this.categoryFacade.updateCategory(request);
+    @PutMapping()
+    public CategoryResponse update(@RequestBody UpdateCategoryRequest request){
+        return this.categoryFacade.update(request);
     }
 
-    @DeleteMapping("/delete")
-    public void deleteCategory(@RequestParam UUID id){
-        this.categoryService.deleteCategory(id);
+    @DeleteMapping()
+    public void delete(@RequestParam UUID id){
+        this.categoryService.delete(id);
     }
 }
