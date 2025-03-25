@@ -84,9 +84,10 @@ public class AccountFacade {
     public AccountResponse update(UpdateAccountRequest request) {
         Account account = this.accountService.findById(request.id());
         if(this.authenticationFacade.evaluateByUsername(account)){
-            this.keycloakService.updateUser(account.getUsername(), request.username(), request.email());
             Account saved = this.accountService.update(request);
-
+            if(Objects.nonNull(request.username()) || Objects.nonNull(request.email())){
+                this.keycloakService.updateUser(account.getUsername(), request.username(), request.email());
+            }
             return new AccountResponse(
                     saved.getId(),
                     saved.getUsername(),
@@ -110,7 +111,7 @@ public class AccountFacade {
             Optional<BookWithAuthorsResponse> optional = favorites.stream()
                     .filter(book -> book.bookId().equals(projection.bookId())).findFirst();
             if(optional.isEmpty()){
-                Set<AuthorShortResponse> authors = new HashSet<>();
+                List<AuthorShortResponse> authors = new ArrayList<>();
                 authors.add(new AuthorShortResponse(
                         projection.authorId(),
                         projection.authorFirstName(),

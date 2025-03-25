@@ -5,7 +5,7 @@ import novikat.library_service.domain.models.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Objects;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 public class BookSpecification {
@@ -25,7 +25,7 @@ public class BookSpecification {
         };
     }
 
-    public static Specification<Book> categoryIdIn(Set<UUID> categories){
+    public static Specification<Book> categoryIdIn(List<UUID> categories){
         return (root, query, criteriaBuilder) -> {
             Join<Book, Category> bookCategory = root.join(Book_.CATEGORIES);
             return bookCategory.get(Category_.ID).in(categories);

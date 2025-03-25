@@ -6,7 +6,7 @@ import novikat.library_service.domain.response.CategoryResponse;
 import novikat.library_service.services.CategoryService;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 @Component
 public class CategoryFacade {
@@ -16,14 +16,14 @@ public class CategoryFacade {
         this.categoryService = categoryService;
     }
 
-    public Set<CategoryResponse> findAll(){
+    public List<CategoryResponse> findAll(){
         return this.categoryService.findAll().stream()
                 .map(category ->
                         new CategoryResponse(
                                 category.getId(),
                                 category.getName()
                         ))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     public CategoryResponse create(String name){

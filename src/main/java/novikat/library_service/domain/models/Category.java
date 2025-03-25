@@ -2,8 +2,10 @@ package novikat.library_service.domain.models;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
+import java.util.UUID;
+
 @Entity
 @Table(name = "category")
 public class Category extends BaseModel{
@@ -11,7 +13,14 @@ public class Category extends BaseModel{
     private String name;
 
     @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
-    private Set<Book> books;
+    private List<Book> books;
+    public Category(){}
+    private Category(Builder builder) {
+        setId(builder.id);
+        setVersion(builder.version);
+        setName(builder.name);
+        setBooks(builder.books);
+    }
 
     public String getName() {
         return name;
@@ -21,11 +30,11 @@ public class Category extends BaseModel{
         this.name = name;
     }
 
-    public Set<Book> getBooks() {
+    public List<Book> getBooks() {
         return books;
     }
 
-    public void setBooks(Set<Book> books) {
+    public void setBooks(List<Book> books) {
         this.books = books;
     }
 
@@ -41,5 +50,44 @@ public class Category extends BaseModel{
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), name);
+    }
+
+
+    public static final class Builder {
+        private UUID id;
+        private Integer version;
+        private String name;
+        private List<Book> books;
+
+        private Builder() {
+        }
+
+        public static Builder builder() {
+            return new Builder();
+        }
+
+        public Builder id(UUID val) {
+            id = val;
+            return this;
+        }
+
+        public Builder version(Integer val) {
+            version = val;
+            return this;
+        }
+
+        public Builder name(String val) {
+            name = val;
+            return this;
+        }
+
+        public Builder books(List<Book> val) {
+            books = val;
+            return this;
+        }
+
+        public Category build() {
+            return new Category(this);
+        }
     }
 }

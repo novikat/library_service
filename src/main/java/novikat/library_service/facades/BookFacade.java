@@ -1,19 +1,23 @@
 package novikat.library_service.facades;
 
 import novikat.library_service.domain.models.Book;
-import novikat.library_service.domain.request.UpdateBookRequest;
-import novikat.library_service.domain.response.*;
 import novikat.library_service.domain.projection.BookWithAuthorsProjection;
-import novikat.library_service.domain.request.EditAuthorBookRequest;
-import novikat.library_service.domain.request.EditCategoryBookRequest;
 import novikat.library_service.domain.request.CreateBookRequest;
+import novikat.library_service.domain.request.UpdateBookRequest;
+import novikat.library_service.domain.response.AuthorShortResponse;
+import novikat.library_service.domain.response.BookDetailedResponse;
+import novikat.library_service.domain.response.BookWithAuthorsResponse;
+import novikat.library_service.domain.response.CategoryResponse;
 import novikat.library_service.services.BookService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 @Component
 public class BookFacade {
@@ -35,31 +39,31 @@ public class BookFacade {
                                 author.getFirstName(),
                                 author.getLastName()
                         ))
-                        .collect(Collectors.toSet()),
+                        .collect(Collectors.toList()),
                 savedBook.getCategories().stream()
                         .map(category -> new CategoryResponse(
                                 category.getId(),
                                 category.getName()
                         ))
-                        .collect(Collectors.toSet())
+                        .collect(Collectors.toList())
         );
     }
 
     public BookDetailedResponse findById(UUID id) {
         Book book = this.bookService.findById(id);
-        Set<CategoryResponse> categories = this.bookService.findBookCategories(id).stream()
+        List<CategoryResponse> categories = book.getCategories().stream()
                 .map(category -> new CategoryResponse(
                         category.getId(),
                         category.getName()
                 ))
-                .collect(Collectors.toSet());
-        Set<AuthorShortResponse> authors = this.bookService.findBookAuthors(id).stream()
+                .collect(Collectors.toList());
+        List<AuthorShortResponse> authors = book.getAuthors().stream()
                 .map(author -> new AuthorShortResponse(
                         author.getId(),
                         author.getFirstName(),
                         author.getLastName()
                 ))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
 
         return new BookDetailedResponse(
                 book.getId(),
@@ -71,7 +75,7 @@ public class BookFacade {
 
     public Page<BookWithAuthorsResponse> findAll(String titleLike,
                                                  String authorLastNameLike,
-                                                 Set<UUID> categoriesIn,
+                                                 List<UUID> categoriesIn,
                                                  Pageable pageable,
                                                  boolean visibleDeleted) {
         List<BookWithAuthorsProjection> projections = this.bookService
@@ -87,7 +91,7 @@ public class BookFacade {
             Optional<BookWithAuthorsResponse> optional = books.stream()
                     .filter(book -> book.bookId().equals(projection.bookId())).findFirst();
             if(optional.isEmpty()){
-                Set<AuthorShortResponse> authors = new HashSet<>();
+                List<AuthorShortResponse> authors = new ArrayList<>();
                 authors.add(new AuthorShortResponse(
                         projection.authorId(),
                         projection.authorFirstName(),
@@ -121,13 +125,13 @@ public class BookFacade {
                                 person.getFirstName(),
                                 person.getLastName()
                         ))
-                        .collect(Collectors.toSet()),
+                        .collect(Collectors.toList()),
                 savedBook.getCategories().stream()
                         .map(category -> new CategoryResponse(
                                 category.getId(),
                                 category.getName()
                         ))
-                        .collect(Collectors.toSet())
+                        .collect(Collectors.toList())
         );
     }
 }

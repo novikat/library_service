@@ -6,7 +6,7 @@ import novikat.library_service.domain.response.CategoryResponse;
 import novikat.library_service.services.CategoryService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -21,7 +21,7 @@ public class CategoryController {
     }
 
     @GetMapping("/all")
-    public Set<CategoryResponse> findAll(){
+    public List<CategoryResponse> findAll(){
         return this.categoryFacade.findAll();
     }
 

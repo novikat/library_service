@@ -90,6 +90,7 @@ public class KeycloakServiceImpl implements KeycloakService{
     }
 
     @Override
+    @Transactional
     public void updateUser(String oldUsername, String newUsername, String newEmail) {
         UserRepresentation userRepresentation = this.getUserByUsername(oldUsername);
         UserResource userResource = this.getUsersResource()

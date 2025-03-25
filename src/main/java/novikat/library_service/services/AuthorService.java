@@ -6,16 +6,15 @@ import novikat.library_service.domain.request.UpdateAuthorRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 public interface AuthorService {
     Author create(CreateAuthorRequest request);
     Page<Author> findAll(Pageable pageable);
-    Set<Author> findByLastname(String lastName);
+    List<Author> findByLastname(String lastName);
     Author update(UpdateAuthorRequest request);
     Author findById(UUID id);
-    Set<Author> findByIdIn(Set<UUID> authorsId);
-
+    List<Author> findByIdIn(List<UUID> authorsId);
     void delete(UUID id);
 }

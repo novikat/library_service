@@ -1,6 +1,6 @@
 package novikat.library_service.domain.response;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 public record AuthorWithBooksResponse(
@@ -8,6 +8,6 @@ public record AuthorWithBooksResponse(
         String firstName,
         String lastName,
         String biography,
-        Set<BookShortResponse> books
+        List<BookShortResponse> books
 ) {
 }

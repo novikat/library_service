@@ -2,12 +2,13 @@ package novikat.library_service.domain.models;
 
 import jakarta.persistence.*;
 
-import java.util.Set;
+import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "author")
-public class Author extends BaseModel{
+public class Author extends BaseModel {
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
@@ -15,10 +16,22 @@ public class Author extends BaseModel{
     @Column(name = "biography")
     private String biography;
     @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY)
-    private Set<Book> books;
-
+    private List<Book> books;
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
-    private Set<BookAuthor> bookAuthor;
+    private List<BookAuthor> bookAuthor;
+
+    public Author() {
+    }
+
+    private Author(Builder builder) {
+        setFirstName(builder.firstName);
+        setLastName(builder.lastName);
+        setBiography(builder.biography);
+        setBooks(builder.books);
+        setBookAuthor(builder.bookAuthor);
+        setId(builder.id);
+        setVersion(builder.version);
+    }
 
     public String getFirstName() {
         return firstName;
@@ -44,19 +57,19 @@ public class Author extends BaseModel{
         this.biography = biography;
     }
 
-    public Set<Book> getBooks() {
+    public List<Book> getBooks() {
         return books;
     }
 
-    public void setBooks(Set<Book> books) {
+    public void setBooks(List<Book> books) {
         this.books = books;
     }
 
-    public Set<BookAuthor> getBookAuthor() {
+    public List<BookAuthor> getBookAuthor() {
         return bookAuthor;
     }
 
-    public void setBookAuthor(Set<BookAuthor> bookAuthor) {
+    public void setBookAuthor(List<BookAuthor> bookAuthor) {
         this.bookAuthor = bookAuthor;
     }
 
@@ -72,5 +85,62 @@ public class Author extends BaseModel{
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), firstName, lastName, biography);
+    }
+
+
+    public static final class Builder {
+        private String firstName;
+        private String lastName;
+        private String biography;
+        private List<Book> books;
+        private List<BookAuthor> bookAuthor;
+        private UUID id;
+        private Integer version;
+
+        private Builder() {
+        }
+
+        public static Builder builder() {
+            return new Builder();
+        }
+
+        public Builder firstName(String val) {
+            firstName = val;
+            return this;
+        }
+
+        public Builder lastName(String val) {
+            lastName = val;
+            return this;
+        }
+
+        public Builder biography(String val) {
+            biography = val;
+            return this;
+        }
+
+        public Builder books(List<Book> val) {
+            books = val;
+            return this;
+        }
+
+        public Builder bookAuthor(List<BookAuthor> val) {
+            bookAuthor = val;
+            return this;
+        }
+
+        public Builder id(UUID val) {
+            id = val;
+            return this;
+        }
+
+        public Builder version(Integer val) {
+            version = val;
+            return this;
+        }
+
+        public Author build() {
+            return new Author(this);
+        }
     }
 }

@@ -44,51 +44,53 @@ public class SecurityConfig {
                 .addFilterBefore(new UserAuthenticationFilter(jwtDecoder()), AnonymousAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers(
-                                        new AntPathRequestMatcher("/admin/review", HttpMethod.DELETE.name())
-                                )
-                                .hasAnyRole(Role.ADMIN.name(), Role.MODERATOR.name())
-                                .requestMatchers(
-                                        new AntPathRequestMatcher("/admin/account", HttpMethod.POST.name()),
-                                        new AntPathRequestMatcher("/admin/account", HttpMethod.PUT.name()),
-                                        new AntPathRequestMatcher("/admin/account/role", HttpMethod.PUT.name()),
-                                        new AntPathRequestMatcher("/admin/book/all", HttpMethod.GET.name()),
-                                        new AntPathRequestMatcher("/admin/review", HttpMethod.DELETE.name()),
-                                        new AntPathRequestMatcher("/book", HttpMethod.POST.name()),
-                                        new AntPathRequestMatcher("/book", HttpMethod.PUT.name()),
-                                        new AntPathRequestMatcher("/book", HttpMethod.DELETE.name()),
-                                        new AntPathRequestMatcher("/author", HttpMethod.POST.name()),
-                                        new AntPathRequestMatcher("/author", HttpMethod.PUT.name()),
-                                        new AntPathRequestMatcher("/author/all", HttpMethod.GET.name()),
-                                        new AntPathRequestMatcher("/author", HttpMethod.DELETE.name()),
-                                        new AntPathRequestMatcher("/category", HttpMethod.GET.name()),
-                                        new AntPathRequestMatcher("/category", HttpMethod.POST.name()),
-                                        new AntPathRequestMatcher("/category", HttpMethod.PUT.name()),
-                                        new AntPathRequestMatcher("/category", HttpMethod.DELETE.name())
-                                )
-                                .hasRole(Role.ADMIN.name())
-                                .requestMatchers(
-                                        new AntPathRequestMatcher( "/account", HttpMethod.GET.name()),
-                                        new AntPathRequestMatcher( "/account", HttpMethod.PUT.name()),
-                                        new AntPathRequestMatcher("/account/favorites", HttpMethod.GET.name()),
-                                        new AntPathRequestMatcher("/account/favorite", HttpMethod.POST.name()),
-                                        new AntPathRequestMatcher("/account/favorite", HttpMethod.DELETE.name())
-                                        )
-                                .hasRole(Role.USER.name())
-                                .requestMatchers(
-                                        new AntPathRequestMatcher("/account", HttpMethod.POST.name()),
-                                        new AntPathRequestMatcher("/auth/**", HttpMethod.POST.name()),
-                                        new AntPathRequestMatcher("/author/all/by_lastname", HttpMethod.GET.name()),
-                                        new AntPathRequestMatcher("/author", HttpMethod.GET.name()),
-                                        new AntPathRequestMatcher("/book/all", HttpMethod.GET.name()),
-                                        new AntPathRequestMatcher("/book", HttpMethod.GET.name()),
-                                        new AntPathRequestMatcher("/category/all", HttpMethod.GET.name()),
-                                        new AntPathRequestMatcher("/review", HttpMethod.POST.name()),
-                                        new AntPathRequestMatcher("/review", HttpMethod.DELETE.name())
-                                        )
-                                .permitAll()
                                 .anyRequest()
-                                .denyAll())
+                                .permitAll())
+//                                .requestMatchers(
+//                                        new AntPathRequestMatcher("/admin/review", HttpMethod.DELETE.name())
+//                                )
+//                                .hasAnyRole(Role.ADMIN.name(), Role.MODERATOR.name())
+//                                .requestMatchers(
+//                                        new AntPathRequestMatcher("/admin/account", HttpMethod.POST.name()),
+//                                        new AntPathRequestMatcher("/admin/account", HttpMethod.PUT.name()),
+//                                        new AntPathRequestMatcher("/admin/account/role", HttpMethod.PUT.name()),
+//                                        new AntPathRequestMatcher("/admin/book/all", HttpMethod.GET.name()),
+//                                        new AntPathRequestMatcher("/admin/review", HttpMethod.DELETE.name()),
+//                                        new AntPathRequestMatcher("/book", HttpMethod.POST.name()),
+//                                        new AntPathRequestMatcher("/book", HttpMethod.PUT.name()),
+//                                        new AntPathRequestMatcher("/book", HttpMethod.DELETE.name()),
+//                                        new AntPathRequestMatcher("/author", HttpMethod.POST.name()),
+//                                        new AntPathRequestMatcher("/author", HttpMethod.PUT.name()),
+//                                        new AntPathRequestMatcher("/author/all", HttpMethod.GET.name()),
+//                                        new AntPathRequestMatcher("/author", HttpMethod.DELETE.name()),
+//                                        new AntPathRequestMatcher("/category", HttpMethod.GET.name()),
+//                                        new AntPathRequestMatcher("/category", HttpMethod.POST.name()),
+//                                        new AntPathRequestMatcher("/category", HttpMethod.PUT.name()),
+//                                        new AntPathRequestMatcher("/category", HttpMethod.DELETE.name())
+//                                )
+//                                .hasRole(Role.ADMIN.name())
+//                                .requestMatchers(
+//                                        new AntPathRequestMatcher( "/account", HttpMethod.GET.name()),
+//                                        new AntPathRequestMatcher( "/account", HttpMethod.PUT.name()),
+//                                        new AntPathRequestMatcher("/account/favorites", HttpMethod.GET.name()),
+//                                        new AntPathRequestMatcher("/account/favorite", HttpMethod.POST.name()),
+//                                        new AntPathRequestMatcher("/account/favorite", HttpMethod.DELETE.name())
+//                                        )
+//                                .hasRole(Role.USER.name())
+//                                .requestMatchers(
+//                                        new AntPathRequestMatcher("/account", HttpMethod.POST.name()),
+//                                        new AntPathRequestMatcher("/auth/**", HttpMethod.POST.name()),
+//                                        new AntPathRequestMatcher("/author/all/by_lastname", HttpMethod.GET.name()),
+//                                        new AntPathRequestMatcher("/author", HttpMethod.GET.name()),
+//                                        new AntPathRequestMatcher("/book/all", HttpMethod.GET.name()),
+//                                        new AntPathRequestMatcher("/book", HttpMethod.GET.name()),
+//                                        new AntPathRequestMatcher("/category/all", HttpMethod.GET.name()),
+//                                        new AntPathRequestMatcher("/review", HttpMethod.POST.name()),
+//                                        new AntPathRequestMatcher("/review", HttpMethod.DELETE.name())
+//                                        )
+//                                .permitAll()
+//                                .anyRequest()
+//                                .denyAll())
                 .build();
     }
 

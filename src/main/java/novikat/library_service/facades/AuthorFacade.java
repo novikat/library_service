@@ -12,8 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 @Component
@@ -45,14 +44,14 @@ public class AuthorFacade {
                 ));
     }
 
-    public Set<AuthorShortResponse> findByLastname(String lastName){
+    public List<AuthorShortResponse> findByLastname(String lastName){
         return this.authorService.findByLastname(lastName).stream()
                 .map(author -> new AuthorShortResponse(
                         author.getId(),
                         author.getFirstName(),
                         author.getLastName()
                 ))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     public AuthorResponse update(UpdateAuthorRequest request){
@@ -75,7 +74,7 @@ public class AuthorFacade {
                 author.getBiography(),
                 author.getBooks().stream()
                         .map(book -> new BookShortResponse(book.getId(), book.getTitle()))
-                        .collect(Collectors.toSet())
+                        .collect(Collectors.toList())
         );
     }
 }

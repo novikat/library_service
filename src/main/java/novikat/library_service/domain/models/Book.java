@@ -6,7 +6,9 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.SQLDelete;
 
 import java.util.Objects;
-import java.util.Set;
+import java.util.List;
+import java.util.UUID;
+
 @Entity
 @Table(name = "book")
 @SQLDelete(sql = "UPDATE book SET deleted = true WHERE id=? AND version = ?")
@@ -28,7 +30,7 @@ public class Book extends BaseModel{
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id")
     )
-    private Set<Author> authors;
+    private List<Author> authors;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(
@@ -36,14 +38,27 @@ public class Book extends BaseModel{
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    private Set<Category> categories;
+    private List<Category> categories;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
-    private Set<BookAuthor> bookAuthor;
+    private List<BookAuthor> bookAuthor;
 
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
-    private Set<AccountBook> bookAccounts;
+    private List<AccountBook> bookAccounts;
+
+    public Book(){}
+    private Book(Builder builder) {
+        setId(builder.id);
+        setVersion(builder.version);
+        setTitle(builder.title);
+        setDescription(builder.description);
+        setDeleted(builder.deleted);
+        setAuthors(builder.authors);
+        setCategories(builder.categories);
+        setBookAuthor(builder.bookAuthor);
+        bookAccounts = builder.bookAccounts;
+    }
 
     public String getTitle() {
         return title;
@@ -61,27 +76,27 @@ public class Book extends BaseModel{
         this.description = description;
     }
 
-    public Set<Author> getAuthors() {
+    public List<Author> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(Set<Author> authors) {
+    public void setAuthors(List<Author> authors) {
         this.authors = authors;
     }
 
-    public Set<Category> getCategories() {
+    public List<Category> getCategories() {
         return categories;
     }
 
-    public void setCategories(Set<Category> categories) {
+    public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
 
-    public Set<BookAuthor> getBookAuthor() {
+    public List<BookAuthor> getBookAuthor() {
         return bookAuthor;
     }
 
-    public void setBookAuthor(Set<BookAuthor> bookAuthor) {
+    public void setBookAuthor(List<BookAuthor> bookAuthor) {
         this.bookAuthor = bookAuthor;
     }
 
@@ -105,5 +120,74 @@ public class Book extends BaseModel{
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), title, description);
+    }
+
+
+    public static final class Builder {
+        private UUID id;
+        private Integer version;
+        private String title;
+        private String description;
+        private boolean deleted;
+        private List<Author> authors;
+        private List<Category> categories;
+        private List<BookAuthor> bookAuthor;
+        private List<AccountBook> bookAccounts;
+
+        private Builder() {
+        }
+
+        public static Builder builder() {
+            return new Builder();
+        }
+
+        public Builder id(UUID val) {
+            id = val;
+            return this;
+        }
+
+        public Builder version(Integer val) {
+            version = val;
+            return this;
+        }
+
+        public Builder title(String val) {
+            title = val;
+            return this;
+        }
+
+        public Builder description(String val) {
+            description = val;
+            return this;
+        }
+
+        public Builder deleted(boolean val) {
+            deleted = val;
+            return this;
+        }
+
+        public Builder authors(List<Author> val) {
+            authors = val;
+            return this;
+        }
+
+        public Builder categories(List<Category> val) {
+            categories = val;
+            return this;
+        }
+
+        public Builder bookAuthor(List<BookAuthor> val) {
+            bookAuthor = val;
+            return this;
+        }
+
+        public Builder bookAccounts(List<AccountBook> val) {
+            bookAccounts = val;
+            return this;
+        }
+
+        public Book build() {
+            return new Book(this);
+        }
     }
 }

@@ -38,11 +38,12 @@ public class ReviewServiceImpl implements ReviewService{
         Account account = this.accountService.findById(request.accountId());
         if(this.authenticationFacade.evaluateByUsername(account)) {
             Book book = this.bookService.findById(request.bookId());
-            Review review = new Review();
-            review.setBook(book);
-            review.setAccount(account);
-            review.setCreationUtc(Instant.now());
-            review.setTextValue(request.text());
+            Review review = Review.Builder.builder()
+                    .book(book)
+                    .account(account)
+                    .creationUtc(Instant.now())
+                    .textValue(request.text())
+                    .build();
             return this.reviewRepository.save(review);
         }
         else {

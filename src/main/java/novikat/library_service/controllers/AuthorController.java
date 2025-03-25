@@ -13,7 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -39,7 +39,7 @@ public class AuthorController {
     }
 
     @GetMapping("/all/by_lastname")
-    public Set<AuthorShortResponse> findByLastname(@RequestParam final String lastName){
+    public List<AuthorShortResponse> findByLastname(@RequestParam final String lastName){
         return this.authorFacade.findByLastname(lastName);
     }
 

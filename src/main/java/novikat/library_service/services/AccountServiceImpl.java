@@ -55,18 +55,19 @@ public class AccountServiceImpl implements AccountService{
     @Override
     @Transactional
     public Account create(CreateAccountRequest request) {
-        Account account = new Account();
         if(this.existsByUsername(request.username().toLowerCase())){
             throw new RuntimeException("Username is already taken");
         }
         if(this.existsByEmail(request.email())){
             throw new RuntimeException("Email is already taken");
         }
-        account.setUsername(request.username().toLowerCase());
-        account.setEmail(request.email());
 
-        Optional.ofNullable(request.firstName()).ifPresent(account::setFirstName);
-        Optional.ofNullable(request.lastName()).ifPresent(account::setLastName);
+        Account account = Account.Builder.builder()
+                .username(request.username().toLowerCase())
+                .email(request.email())
+                .firstName(request.firstName())
+                .lastName(request.lastName())
+                .build();
 
         return this.accountRepository.save(account);
     }

@@ -15,7 +15,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -59,7 +59,7 @@ public class AdminController {
     @GetMapping("/book/all")
     public Page<BookWithAuthorsResponse> findAll(@RequestParam(required = false) String titleLike,
                                                  @RequestParam(required = false) String authorLastNameLike,
-                                                 @RequestParam(required = false) Set<UUID> categoriesIn,
+                                                 @RequestParam(required = false) List<UUID> categoriesIn,
                                                  @PageableDefault(value = 20, page = 0) Pageable pageable
     ){
         return this.bookFacade.findAll(titleLike, authorLastNameLike, categoriesIn, pageable, true);

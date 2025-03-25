@@ -6,9 +6,8 @@ import novikat.library_service.repositories.CategoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+
 @Service
 public class CategoryServiceImpl implements CategoryService{
 
@@ -19,8 +18,8 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public Set<Category> findAll() {
-        return new HashSet<>(this.categoryRepository.findAll());
+    public List<Category> findAll() {
+        return new ArrayList<>(this.categoryRepository.findAll());
     }
 
     @Override
@@ -30,15 +29,16 @@ public class CategoryServiceImpl implements CategoryService{
             throw new RuntimeException("Category `" + name + "` already exists");
         }
         else{
-            Category category = new Category();
-            category.setName(name);
+            Category category = Category.Builder.builder()
+                    .name(name)
+                    .build();
 
             return this.categoryRepository.save(category);
         }
     }
 
     @Override
-    public Set<Category> findAllByIdIn(Set<UUID> categoriesId) {
+    public List<Category> findAllByIdIn(List<UUID> categoriesId) {
         return this.categoryRepository.findAllByIdIn(categoriesId);
     }
 

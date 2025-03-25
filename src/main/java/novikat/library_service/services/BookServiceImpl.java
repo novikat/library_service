@@ -1,5 +1,6 @@
 package novikat.library_service.services;
 
+import novikat.library_service.clients.FileLoadClient;
 import novikat.library_service.domain.models.*;
 import novikat.library_service.domain.projection.BookWithAuthorsProjection;
 import novikat.library_service.domain.request.EditAuthorBookRequest;
@@ -8,30 +9,33 @@ import novikat.library_service.domain.request.CreateBookRequest;
 import novikat.library_service.domain.request.UpdateBookRequest;
 import novikat.library_service.repositories.BookRepository;
 import novikat.library_service.utils.BookSpecification;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
 @Service
 public class BookServiceImpl implements BookService {
-
     private BookRepository bookRepository;
     private CategoryService categoryService;
     private AuthorService authorService;
+    private FileLoadClient fileLoadClient;
 
-    public BookServiceImpl(BookRepository bookRepository,
-                           CategoryService categoryService,
-                           AuthorService authorService) {
+    public BookServiceImpl(BookRepository bookRepository, CategoryService categoryService, AuthorService authorService, FileLoadClient fileLoadClient) {
         this.bookRepository = bookRepository;
         this.categoryService = categoryService;
         this.authorService = authorService;
+        this.fileLoadClient = fileLoadClient;
     }
 
-  /*  @Override
+    /*  @Override
     public Page<BookWithAuthorsProjection> getAllBooksWithAuthors(Pageable pageable) {
         return this.bookRepository.findAllBooksWithAuthors(pageable);
     }*/
@@ -39,14 +43,14 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public Book create(CreateBookRequest request) {
-        Set<Author> authors = this.authorService.findByIdIn(request.authors());
-        Set<Category> categories = this.categoryService.findAllByIdIn(request.categories());
+        List<Author> authors = this.authorService.findByIdIn(request.authors());
+        List<Category> categories = this.categoryService.findAllByIdIn(request.categories());
 
-        Book book = new Book();
-        book.setTitle(request.title());
-        book.setAuthors(authors);
-        book.setCategories(categories);
-
+        Book book = Book.Builder.builder()
+                .title(request.title())
+                .authors(authors)
+                .categories(categories)
+                .build();
         return this.bookRepository.save(book);
     }
 
@@ -69,22 +73,13 @@ public class BookServiceImpl implements BookService {
     public void delete(UUID id) {
         this.deleteAllBookCategoryByBookId(id);
         this.bookRepository.deleteById(id);
-    }
-
-    @Override
-    public Set<Category> findBookCategories(UUID id) {
-        return this.findById(id).getCategories();
-    }
-
-    @Override
-    public Set<Author> findBookAuthors(UUID id) {
-        return this.findById(id).getAuthors();
+        this.deleteFile(id);
     }
 
     @Override
     public List<BookWithAuthorsProjection> findAll(String titleLike,
                                                    String authorLastNameLike,
-                                                   Set<UUID> categoriesIn,
+                                                   List<UUID> categoriesIn,
                                                    Pageable pageable,
                                                    boolean visibleDeleted) {
         Specification<Book> filters = Specification
@@ -110,12 +105,12 @@ public class BookServiceImpl implements BookService {
     public Book update(UpdateBookRequest request) {
         Book book = this.findById(request.id());
         if(!Objects.isNull(request.authors()) && request.authors().size() > 0 ){
-            Set<Author> authors = this.authorService.findByIdIn(request.authors());
+            List<Author> authors = this.authorService.findByIdIn(request.authors());
             book.getAuthors().clear();
             book.getAuthors().addAll(authors);
         }
         if(!Objects.isNull(request.categories())){
-            Set<Category> categories = this.categoryService.findAllByIdIn(request.categories());
+            List<Category> categories = this.categoryService.findAllByIdIn(request.categories());
             book.getCategories().clear();
             book.getCategories().addAll(categories);
         }
@@ -123,5 +118,17 @@ public class BookServiceImpl implements BookService {
             book.setTitle(request.title());
         }
         return this.bookRepository.save(book);
+    }
+    @Override
+    public ResponseEntity<ByteArrayResource> downloadFile(UUID bookId) {
+        return this.fileLoadClient.download(bookId);
+    }
+    @Override
+    public ResponseEntity<?> uploadFile(MultipartFile file, UUID bookId) {
+        return this.fileLoadClient.upload(file, bookId);
+    }
+    @Override
+    public void deleteFile(UUID bookId) {
+        this.fileLoadClient.delete(bookId);
     }
 }

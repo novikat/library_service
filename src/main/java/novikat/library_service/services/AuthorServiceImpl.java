@@ -9,8 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -29,11 +29,11 @@ public class AuthorServiceImpl implements AuthorService{
             throw new RuntimeException("Author " + request.firstName() + " " + request.lastName() + " already exist." );
         }
         else{
-            Author author = new Author();
-            author.setFirstName(request.firstName());
-            author.setLastName(request.lastName());
-            author.setBiography(request.biography());
-
+            Author author = Author.Builder.builder()
+                    .firstName(request.firstName())
+                    .lastName(request.lastName())
+                    .biography(request.biography())
+                    .build();
             return this.authorRepository.save(author);
         }
     }
@@ -44,12 +44,12 @@ public class AuthorServiceImpl implements AuthorService{
     }
 
     @Override
-    public Set<Author> findByLastname(String lastName) {
+    public List<Author> findByLastname(String lastName) {
         return this.authorRepository.findByLastNameContainingIgnoreCase(lastName);
     }
 
     @Override
-    public Set<Author> findByIdIn(Set<UUID> authorsId) {
+    public List<Author> findByIdIn(List<UUID> authorsId) {
         return this.authorRepository.findAllByIdIn(authorsId);
     }
 
